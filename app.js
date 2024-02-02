@@ -1,7 +1,11 @@
+let score = 0;
+let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
+
 const gameBoardTable = document.getElementById('gameboard');
 const messageDiv = document.getElementById('message');
+const scoreDiv = document.getElementById('score');
 
-const foodArray = ['&#127815', '&#127816', '&#127817', '&#127822', '&#127826', '&#129373', '&#129361', '&#127814', '&#129365', '&#127812', '&#127829'];
+const foodArray = ['🍎', '🍏'];
 const boardSize = 20
 
 let gameBoard = [...Array(boardSize).keys()].map(() => [...Array(boardSize).keys()].map(() => 0));
@@ -79,13 +83,11 @@ function drawGameBoard () {
             boardRowTr.append(boardCellTd);
         });
         gameBoardTable.append(boardRowTr);
+        document.getElementById('high-score').innerText = 'High Score: ' + highScore;
     });
 }
 
-
-// calculate new cursor for snake
 function calculateNewCursor () {
-
     let [y, x] = snake[0].split('_');
 
     switch ( direction ) {
@@ -106,6 +108,13 @@ function calculateNewCursor () {
     if ( y == foodY && x == foodX ) {
         addFood();
         snake.push(undefined);
+        score++;
+        scoreDiv.innerText = 'Score: ' + score;
+
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('highScore', highScore);
+        }
     }
 
     return [y, x];    
